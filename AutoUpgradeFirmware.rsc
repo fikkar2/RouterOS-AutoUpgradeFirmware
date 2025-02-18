@@ -62,7 +62,7 @@
 
 /log info "AutoUpdate: Checking for update..."
 /system package update check-for-updates
-:delay 15
+:delay 30
 :local installedVersion [/system package get value-name=version [find where name="routeros"]]
 :local latestVersion [/system package update get value-name=latest-version]
 
