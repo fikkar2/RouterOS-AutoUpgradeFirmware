@@ -41,8 +41,9 @@
 # Boot-up Delay
 :delay 30
 
-:local isRouterBOARD [/system routerboard get model]
-:if ([:len $isRouterBOARD] > 0) do={
+:local architectureName [/system resource get architecture-name]
+
+:if ($architectureName != "x86_64") do={
     :local currentFirmware [/system routerboard get current-firmware]
     :local upgradeFirmware [/system routerboard get upgrade-firmware]
     
