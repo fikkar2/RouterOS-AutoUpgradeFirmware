@@ -7,31 +7,23 @@
 
 :global version2arr do={
     :local ver [:tostr $1]
-    :local pos 0
-    :local major "" ; :local minor ""; :local patch ""
-    :set pos   [:find $ver "." -1]
-    :set major [:pick $ver 0 $pos]
-    :set ver   [:pick $ver ($pos + 1) [:len $ver]]
-    :if ([:typeof [:find $ver "." -1]] != "nil") do={
-        :set pos   [:find $ver "." -1]
-        :set minor [:pick $ver 0 $pos]
-        :set ver   [:pick $ver ($pos + 1) [:len $ver]]
-    }
-    :if ([:typeof [:find $ver " " -1]] != "nil") do={
-        :set pos [:find $ver " " -1]
-        :if ($minor = "") do={
-            :set minor [:pick $ver 0 $pos]
+    :local parts [:toarray ""]
+    :foreach v in=[:toarray "."] do={
+        :local pos [:find $ver "."]
+        :if ($pos = nil) do={
+            :set parts ($parts, $ver)
+            :set ver ""
         } else={
-            :set patch [:pick $ver 0 $pos]
+            :set parts ($parts, [:pick $ver 0 $pos])
+            :set ver [:pick $ver ($pos + 1) [:len $ver]]
         }
-        :set ver [:pick $ver ($pos + 1) [:len $ver]]
     }
-    :if ($ver ~ "^ ") do={
-        :set patch [:pick $ver 1 [:len $ver]]
-    } else={
-        :set patch $ver
+    :if ([:len $parts] < 3) do={
+        :for i from=([:len $parts]) to=2 do={
+            :set parts ($parts, "0")
+        }
     }
-    :return ($major,$minor,$patch)
+    :return $parts
 }
 
 :local minimumPatch 2
@@ -73,13 +65,13 @@
         :local latestVerParts [$version2arr $latestVersion]
 
         :if ([:len $installedVerParts] >= 3 && [:len $latestVerParts] >= 3) do={
-            :local installedMajor [:pick $installedVerParts 0]
-            :local installedMinor [:pick $installedVerParts 1]
-            :local installedPatch [:pick $installedVerParts 2]
+            :local installedMajor [:tonum [:pick $installedVerParts 0]]
+            :local installedMinor [:tonum [:pick $installedVerParts 1]]
+            :local installedPatch [:tonum [:pick $installedVerParts 2]]
 
-            :local latestMajor [:pick $latestVerParts 0]
-            :local latestMinor [:pick $latestVerParts 1]
-            :local latestPatch [:pick $latestVerParts 2]
+            :local latestMajor [:tonum [:pick $latestVerParts 0]]
+            :local latestMinor [:tonum [:pick $latestVerParts 1]]
+            :local latestPatch [:tonum [:pick $latestVerParts 2]]
             
             :if ($latestPatch >= $minimumPatch && $latestMinor >= $installedMinor) do={
                 /log info "AutoUpdate: Critical package updates available. Downloading updates..."
@@ -87,7 +79,7 @@
                 :delay 3
                 /log info "AutoUpdate: Installing and Rebooting device to apply updates..."
             } else={
-                /log info "AutoUpdate: No critical package updates available. Patch number is less than $minimumPatch."
+                /log info "AutoUpdate: Latest version has patch number less than $minimumPatch. Skipping update."
             }
         } else={
             /log info "AutoUpdate: Failed to check for updates. Cannot parse version information."
