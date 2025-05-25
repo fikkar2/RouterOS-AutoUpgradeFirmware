@@ -89,5 +89,5 @@
 
     }
 } else={
-    /log info "AutoUpdate: Failed to check for updates. Cannot read version information."
+    /log info "AutoUpdate: Failed to check for updates. Cannot read version information..."
 }
