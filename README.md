@@ -92,7 +92,7 @@ You can increase the value if you want be more sure the latest version is more s
 ## 🧪 Disclaimer
 
 Use at your own risk. Always test scripts in a staging or non-critical environment before deploying to production routers.
-I am not responsible for any damage causes by this script.
+I am not responsible for any damage causes by this script and I am not representing Mikrotik by any means.
 
 ---
 
