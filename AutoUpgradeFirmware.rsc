@@ -8,8 +8,15 @@
 :global version2arr do={
     :local ver [:tostr $1]
     :local parts [:toarray ""]
-    :foreach v in=[:toarray "."] do={
-        :local pos [:find $ver "."]
+    :local pos 0
+
+    :if ([:len $ver] = 0) do={
+        :log warning "version2arr: empty input string"
+        :return [:toarray ""]
+    }
+
+    :while ([:len $ver] > 0) do={
+        :set pos [:find $ver "."]
         :if ($pos = nil) do={
             :set parts ($parts, $ver)
             :set ver ""
@@ -18,11 +25,11 @@
             :set ver [:pick $ver ($pos + 1) [:len $ver]]
         }
     }
-    :if ([:len $parts] < 3) do={
-        :for i from=([:len $parts]) to=2 do={
-            :set parts ($parts, "0")
-        }
+
+    :while ([:len $parts] < 3) do={
+        :set parts ($parts, "0")
     }
+
     :return $parts
 }
 
@@ -42,7 +49,7 @@
     :if ($currentFirmware != $upgradeFirmware) do={
         /log info "AutoUpdate: Firmware upgrade available. Upgrading firmware..."
         /system routerboard upgrade
-        :delay 30
+        :delay 15
         /log info "AutoUpdate: Rebooting device to apply firmware upgrade..."
         /system reboot
     } else={
@@ -54,7 +61,7 @@
 
 /log info "AutoUpdate: Checking for update..."
 /system package update check-for-updates
-:delay 30
+:delay 15
 :local installedVersion [/system package get value-name=version [find where name="routeros"]]
 :local latestVersion [/system package update get value-name=latest-version]
 
@@ -63,6 +70,11 @@
     :if ($installedVersion != $latestVersion) do={
         :local installedVerParts [$version2arr $installedVersion]
         :local latestVerParts [$version2arr $latestVersion]
+
+        :if ([:len $installedVerParts] < 3 || [:len $latestVerParts] < 3) do={
+        /log warning "AutoUpdate: version2arr returned invalid result"
+        :return
+        }
 
         :if ([:len $installedVerParts] >= 3 && [:len $latestVerParts] >= 3) do={
             :local installedMajor [:tonum [:pick $installedVerParts 0]]
