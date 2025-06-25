@@ -38,7 +38,7 @@
 /log info "AutoUpdate: Starting AutoUpgradeFirmware script..."
 
 # Boot-up Delay
-:delay 30
+:delay 15
 
 :local architectureName [/system resource get architecture-name]
 
