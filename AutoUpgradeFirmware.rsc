@@ -62,8 +62,11 @@
 /log info "AutoUpdate: Checking for update..."
 /system package update check-for-updates
 :delay 15
-:local installedVersion [/system package get value-name=version [find where name="routeros"]]
+:local installedVersion [/system package update get value-name=installed-version]
 :local latestVersion [/system package update get value-name=latest-version]
+
+/log info ("AutoUpdate: Installed RouterOS version: " . $installedVersion)
+/log info ("AutoUpdate: Latest RouterOS version: " . $latestVersion)
 
 :if ([:len $installedVersion] > 0 && [:len $latestVersion] > 0) do={ 
 
