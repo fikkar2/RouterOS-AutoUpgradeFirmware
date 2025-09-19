@@ -54,7 +54,7 @@ This MikroTik RouterOS script automates the firmware and RouterOS update process
 ## 🔄 How to Schedule It
 
 I recommend you to have 2 scheduler running this script, especially if your RouterOS hardware is not x86_64 or CHR.
-One scheduler runs on booot/start and the second one runs periodically (I recommend every 7 days).
+One scheduler runs on boot/start and the second one runs periodically (I recommend every 7 days).
 This is so that your firmware is also updated after the RouterOS updated (It will reboot twice, one for updating the RouterOS, and the second reboot is for updating the firmware if it is RouterBOARD).
 
 To run this script at boot/start and periodically:
@@ -78,7 +78,7 @@ You can tweak the patch update threshold:
 ```
 Based on experience, mikrotik early minor/major version updates (i.e. Patch number 0-1) were historicly sometimes have major/minor bugs.
 I recommend to set and wait at least 2 patch before doing minor/major update.
-You can increase the value if you want be more sure the latest version is more stable. However, if it is too high and your script might never update your RouterOS especially if mikrotik decides to up ther minor/major version before your minimumPatch number is reached.
+You can increase the value if you want be more sure the latest version is more stable. However, if it is too high and your script might never update your RouterOS especially if mikrotik decides to up their minor/major version before your minimumPatch number is reached.
 
 ---
 
@@ -99,6 +99,6 @@ I am not responsible for any damage causes by this script and I am not represent
 ## 👨‍💻 Author
 
 Created by: **Muhammad Fikkar Faruqi**  
-Date: **June 2025**
+Date: **September 2025**
 
 Feel free to improve or modify based on your network's needs!
