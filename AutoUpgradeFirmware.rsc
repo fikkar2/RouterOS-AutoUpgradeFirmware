@@ -42,7 +42,9 @@
 
 :local architectureName [/system resource get architecture-name]
 
-:if ($architectureName != "x86_64") do={
+:if ($architectureName = "x86_64" || $architectureName = "x86") do={
+    /log info "AutoUpdate: This device is not a RouterBOARD. Skipping firmware check."
+} else={
     :local currentFirmware [/system routerboard get current-firmware]
     :local upgradeFirmware [/system routerboard get upgrade-firmware]
     
@@ -55,8 +57,6 @@
     } else={
         /log info "AutoUpdate: Firmware is up to date."
     }
-} else={
-    /log info "AutoUpdate: This device is not a RouterBOARD. Skipping firmware check."
 }
 
 /log info "AutoUpdate: Checking for update..."
